@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="fetch_text">Päivitä</string>
+    <string name="clear_text">Tyhjennä</string>
+    <string name="connection_error">Yhteysvirhe!</string>
+    <string name="line_id_label">Linjan numero</string>
+    <string name="vehicle_id_label">Auton numero</string>
+    <string name="bus_stop_label">Pysäkin numero</string>
+    <string name="but_stop_help">Saat huomatuksen kun autosi lähestyy valitsemaasi pysäkkiä</string>
+</resources>
