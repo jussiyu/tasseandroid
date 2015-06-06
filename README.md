@@ -8,7 +8,12 @@ This is app based on Android NetworkConnect sample app licensed under Apache Lic
 
 - Connecting to and parsing Tampere Journeys API JSON data: http://wiki.itsfactory.fi/index.php/Journeys_API
 - New UI
-  
+
+Screenshots
+-------------
+
+<img src="screenshots/main.png" height="400" alt="Screenshot"/>
+
 TODO
 ------------
 
