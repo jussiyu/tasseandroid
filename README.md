@@ -1,5 +1,5 @@
 
-Android Tässe! 2015 Tampere #opendata Makes You Move Hackathlon -inspired app  
+Android Tässe! 2015 Tampere #opendata Makes You Move Hackathon -inspired app  
 ===================================
 
 This app will show you a notification when the specified bus on a specified line is approaching the specified bus stop. The currently only check the next bus stop the vehicle is approach.
