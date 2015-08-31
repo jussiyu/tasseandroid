@@ -19,8 +19,11 @@
     <string name="clear_text">Clear</string>
     <string name="connection_error">Connection error.</string>
     <string name="line_id_label">Line id</string>
-    <string name="vehicle_id_label">Vehicle id</string>
-    <string name="bus_stop_label">Bus stop id</string>
-    <string name="but_stop_help">You will be notified when your bus is approaching your bus stop</string>
     <string name="line_id_value_default">1</string>
+    <string name="vehicle_id_label">Vehicle id</string>
+    <string name="vehicle_id_value_default">*</string>
+    <string name="bus_stop_label">Bus stop id</string>
+    <string name="bus_stop_value_default"></string>
+    <string name="but_stop_help">You will be notified when your bus is approaching your bus stop</string>
+    <string name="bus_stop_hint">for example: 1234</string>
 </resources>

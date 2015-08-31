@@ -82,7 +82,7 @@
             android:ems="10"
             android:layout_alignParentRight="true"
             android:hint="esim. Paunu_160"
-            android:text="*" />
+            android:text="@string/vehicle_id_value_default" />
 
     </RelativeLayout>
 
@@ -113,7 +113,8 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="false"
-            android:hint="esim. 1234" />
+            android:text="@string/bus_stop_value_default"
+            android:hint="@string/bus_stop_hint" />
 
         <TextView
             android:layout_width="wrap_content"

@@ -7,4 +7,5 @@
     <string name="vehicle_id_label">Auton numero</string>
     <string name="bus_stop_label">Pysäkin numero</string>
     <string name="but_stop_help">Saat huomatuksen kun autosi lähestyy valitsemaasi pysäkkiä</string>
+    <string name="bus_stop_hint">esim. 1234</string>
 </resources>
