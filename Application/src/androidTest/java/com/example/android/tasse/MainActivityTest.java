@@ -3,6 +3,7 @@
  */
 package com.example.android.tasse;
 
+import android.app.Activity;
 import android.test.ActivityInstrumentationTestCase2;
 import android.widget.EditText;
 
@@ -11,7 +12,7 @@ import android.widget.EditText;
  */
 public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActivity> {
 
-    private MainActivitymTestActivity;
+    private Activity mTestActivity;
     private EditText mLineIdEditText;
     private EditText mVehicleIdEditText;
     private EditText mStopIdEditText;
@@ -49,18 +50,22 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
     public void testInitialEditTextValue_lineId() throws Exception {
         assertEquals("line Id initial value is incorrect", mLineIdEditText.getText().toString(),
-                mTestActivity.getString(R.string.line_id_default).toString());
+                mTestActivity.getString(R.string.line_id_value_default).toString());
     }
     public void testInitialEditTextValue_vehId() throws Exception {
         assertEquals("vehicle Id initial value is incorrect", mVehicleIdEditText.getText().toString(),
-                mTestActivity.getString(R.string.vehicle_id_default).toString());
+                mTestActivity.getString(R.string.vehicle_id_value_default).toString());
     }
     public void testInitialEditTextValue_stopId() throws Exception {
-        assertEquals("stopId initial value is incorrect", mVehicleIdEditText.getText().toString(),
-                mTestActivity.getString(R.string.bus_stop_default).toString());
+        assertEquals("stopId initial value is incorrect", mStopIdEditText.getText().toString(),
+                mTestActivity.getString(R.string.bus_stop_value_default).toString());
     }
     public void testEditTextHint_stopId() throws Exception {
-        assertEquals("stopId hint is incorrect", mVehicleIdEditText.getHint().toString(),
-                mTestActivity.getString(R.string.bus_stop_hint).toString());
+        assertEquals("stopId hint is incorrect", mStopIdEditText.getHint().toString(),
+                mTestActivity.getString(R.string.bus_stop_hint));
+    }
+    public void testEditTextHint_vehId() throws Exception {
+        assertEquals("vehId hint is incorrect", mVehicleIdEditText.getHint().toString(),
+                mTestActivity.getString(R.string.vehicle_id_hint));
     }
 }

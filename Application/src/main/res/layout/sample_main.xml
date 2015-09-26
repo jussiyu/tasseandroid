@@ -81,7 +81,7 @@
             android:inputType="text"
             android:ems="10"
             android:layout_alignParentRight="true"
-            android:hint="esim. Paunu_160"
+            android:hint="@string/vehicle_id_hint"
             android:text="@string/vehicle_id_value_default" />
 
     </RelativeLayout>
