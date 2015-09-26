@@ -6,5 +6,6 @@ android:
 
     # The SDK version used to compile your project
     - android-23
+    - extra-android-support
     
 script: ./gradlew build test
