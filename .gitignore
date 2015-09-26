@@ -37,5 +37,8 @@ local.properties
 # Gradle cache
 .gradle
 
+# Ensure that gradle-wrapper is included
+!gradle/**/*.jar
+
 # Sandbox stuff
 _sandbox
