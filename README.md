@@ -1,6 +1,7 @@
 
-Android Tässe! 2015 Tampere #opendata Makes You Move Hackathon -inspired app  
+Android Tässe! [![Build Status](https://travis-ci.org/jussiyu/tasseandroid.svg)](https://travis-ci.org/jussiyu/tasseandroid)
 ===================================
+A _2015 Tampere #opendata Makes You Move Hackathon_ -inspired app.
 
 This app will show you a notification when the specified bus on a specified line is approaching the specified bus stop. The currently only check the next bus stop the vehicle is approach.
 
@@ -25,15 +26,16 @@ TODO
 - lots of refactorings
 - test
 
-Pre-requisites
+Dependencies
 --------------
 
-- Android SDK v22
-- Android Build Tools v22.0.1
-- Android Support Repository
+- Android SDK v23
+- Android Build Tools
+- Android Support Library v4
+- JUnit
 
 Getting Started
 ---------------
 
 This app uses the Gradle build system. To build this project, use the
-"gradlew build" command or use "Import Project" in Android Studio.
+"./gradlew build" command or use "Import Project" in Android Studio.
