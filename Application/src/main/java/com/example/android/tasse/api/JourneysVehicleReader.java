@@ -10,8 +10,6 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,18 +28,18 @@ public class JourneysVehicleReader {
     /** Initiates the fetch operation. */
     public void loadFromNetwork(String urlString) {
         mVehicles = null;
-        InputStream stream = null;
+        Reader reader = null;
 
         try {
-            stream = downloadUrl(urlString);
-            mVehicles = loadVehiclesFromNetwork(stream);
+            reader = downloadUrl(urlString);
+            mVehicles = loadVehiclesFromNetwork(reader);
 
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            if (stream != null) {
+            if (reader != null) {
                 try {
-                    stream.close();
+                    reader.close();
                 } catch (IOException e) {
                     // Nothing to do
                 }
@@ -61,35 +59,28 @@ public class JourneysVehicleReader {
      * @return An InputStream retrieved from a successful HttpURLConnection.
      * @throws java.io.IOException
      */
-    private InputStream downloadUrl(String urlString) throws IOException {
+    private Reader downloadUrl(String urlString) throws IOException {
         final Request request = new Request.Builder()
                 .url(urlString)
                 .build();
 
         final Response response = client.newCall(request).execute();
 
-        return response.body().byteStream();
+        return response.body().charStream();
     }
 
-    /** Reads an InputStream and converts it to a String.
-     * @param stream InputStream containing HTML from targeted site.
-     * @param len Length of string that this method returns.
-     * @return String concatenated according to len parameter.
-     * @throws java.io.IOException
-     * @throws java.io.UnsupportedEncodingException
+    /**
+     * Creates list of Vechicles based on content from reader. Reader is closed after
+     * consumption.
+     *
+     * @param reader
+     * @return
+     * @throws IOException
      */
-    private String readIt(InputStream stream, int len) throws IOException {
-        Reader reader = null;
-        reader = new InputStreamReader(stream, "UTF-8");
-        char[] buffer = new char[len];
-        reader.read(buffer);
-        return new String(buffer);
-    }
-
-    private List<Vehicle> loadVehiclesFromNetwork(InputStream stream) throws IOException {
-        JsonReader reader = new JsonReader(new InputStreamReader(stream, "UTF-8"));
+    private List<Vehicle> loadVehiclesFromNetwork(Reader reader) throws IOException {
+        JsonReader jsonReader = new JsonReader(reader);
         try {
-            return readVehiclesFromBody(reader);
+            return readVehiclesFromBody(jsonReader);
         } finally{
             reader.close();
         }
