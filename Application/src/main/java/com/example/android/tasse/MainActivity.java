@@ -33,6 +33,8 @@ import com.example.android.common.logger.Log;
 import com.example.android.common.logger.LogFragment;
 import com.example.android.common.logger.LogWrapper;
 import com.example.android.common.logger.MessageOnlyLogFilter;
+import com.example.android.tasse.api.HttpClientFactory;
+import com.example.android.tasse.api.JourneysVehicleReader;
 
 import java.util.List;
 
@@ -119,7 +121,8 @@ public class MainActivity extends FragmentActivity {
 
         @Override
         protected List<Vehicle> doInBackground(String... url) {
-            JourneysVehicleReader reader = new JourneysVehicleReader();
+            assert url.length == 1;
+            JourneysVehicleReader reader = new JourneysVehicleReader(HttpClientFactory.INSTANCE.getClient());
             reader.loadFromNetwork(url[0]);
             return reader.getVehicles();
         }
@@ -144,7 +147,7 @@ public class MainActivity extends FragmentActivity {
                     if (s != null && stopId == s.getId()) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                         builder.setMessage("Tässe pysäkki ny on!")
-                                .setTitle("").setPositiveButton("Ok",null);
+                                .setTitle("").setPositiveButton("Ok", null);
                         final AlertDialog dialog = builder.create();
                         dialog.show();
                     }
@@ -156,7 +159,9 @@ public class MainActivity extends FragmentActivity {
     }
 
 
-    /** Create a chain of targets that will receive log data */
+    /**
+     * Create a chain of targets that will receive log data
+     */
     public void initializeLogging() {
 
         // Using Log, front-end to the logging chain, emulates

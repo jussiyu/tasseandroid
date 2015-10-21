@@ -1,7 +1,10 @@
-package com.example.android.tasse;
+package com.example.android.tasse.api;
 
 import android.util.JsonReader;
 
+import com.example.android.tasse.Journey;
+import com.example.android.tasse.Stop;
+import com.example.android.tasse.Vehicle;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
@@ -12,7 +15,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class JourneysVehicleReader {
 
@@ -20,11 +22,10 @@ public class JourneysVehicleReader {
     private final OkHttpClient client;
 
 
-    public JourneysVehicleReader() {
-        client = new OkHttpClient();
-        client.setReadTimeout(10, TimeUnit.SECONDS);
-        client.setConnectTimeout(15, TimeUnit.SECONDS);
+    public JourneysVehicleReader(OkHttpClient client) {
+        this.client = client;
     }
+
 
     /** Initiates the fetch operation. */
     public void loadFromNetwork(String urlString) {
