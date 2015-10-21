@@ -12,4 +12,5 @@
     <string name="bus_stop_value_default"></string>
     <string name="but_stop_help">Saat huomatuksen kun autosi lähestyy valitsemaasi pysäkkiä</string>
     <string name="bus_stop_hint">esim. 1234</string>
+    <string name="stop_found_message">Tässe pysäkki ny on!</string>
 </resources>

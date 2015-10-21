@@ -1,5 +1,6 @@
 package com.example.android.tasse.api;
 
+import android.support.annotation.NonNull;
 import android.util.JsonReader;
 
 import com.example.android.tasse.Journey;
@@ -25,17 +26,21 @@ public class JourneysVehicleReader {
     }
 
 
-    /** Initiates the fetch operation. */
-    public void loadFromNetwork(String urlString) {
+    /**
+     * Initiates the fetch operation.
+     */
+    public boolean loadFromNetwork(@NonNull String urlString) {
         mVehicles = null;
         Reader reader = null;
 
         try {
             reader = downloadUrl(urlString);
             mVehicles = loadVehiclesFromNetwork(reader);
+            return true;
 
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         } finally {
             if (reader != null) {
                 try {
@@ -47,14 +52,19 @@ public class JourneysVehicleReader {
         }
     }
 
-    public List<Vehicle> getVehicles() {
-        return mVehicles;
+    public @NonNull List<Vehicle> getVehicles() {
+        if (mVehicles != null) {
+            return mVehicles;
+        } else {
+            return new ArrayList<Vehicle>();
+        }
     }
 
 
     /**
      * Given a string representation of a URL, sets up a connection and gets
      * an input stream.
+     *
      * @param urlString A string representation of a URL.
      * @return An InputStream retrieved from a successful HttpURLConnection.
      * @throws java.io.IOException
@@ -81,7 +91,7 @@ public class JourneysVehicleReader {
         JsonReader jsonReader = new JsonReader(reader);
         try {
             return readVehiclesFromBody(jsonReader);
-        } finally{
+        } finally {
             reader.close();
         }
     }
@@ -138,7 +148,7 @@ public class JourneysVehicleReader {
             String name = reader.nextName();
             if (name.equals("onwardCalls")) {
                 j.addStop(readStop(reader));
-            } else if (name.equals("vehicleRef" )) {
+            } else if (name.equals("vehicleRef")) {
                 j.addVehRef(reader.nextString());
             } else {
                 reader.skipValue();
@@ -167,7 +177,7 @@ public class JourneysVehicleReader {
             reader.endObject();
         }
         // consume the rest of the bus stops as we don't yet use them
-        while(reader.hasNext()) {
+        while (reader.hasNext()) {
             reader.skipValue();
         }
         reader.endArray();

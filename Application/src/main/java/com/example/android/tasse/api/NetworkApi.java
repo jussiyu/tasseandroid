@@ -1,42 +1,52 @@
 package com.example.android.tasse.api;
 
-import android.net.Uri;
 import android.os.AsyncTask;
 
 import com.example.android.common.logger.Log;
 import com.example.android.tasse.Vehicle;
+import com.squareup.okhttp.HttpUrl;
 
 import java.util.List;
 
 public class NetworkApi {
     private static final String TAG = "NetworkApi";
+
+    private static final String HOST = "data.itsfactory.fi";
+    private static final String SCHEME = "http";
+    private static final String VERSION = "1";
+    private final String PATH_JOURNEYS = "journeys";
+    private final String PATH_API = "api";
+
     private static NetworkApiCallback networkApiCallback;
 
     public interface NetworkApiCallback {
-        public void onSuccess(List<Vehicle> result);
+        void onSuccess(List<Vehicle> result);
+
+        void onError(String errorMessage);
     }
 
     public void executeNetworkOperation(Integer lineId, String vehId, NetworkApiCallback networkApiCallback) {
         NetworkApi.networkApiCallback = networkApiCallback;
-        try {
-            String uri = getUri(lineId, vehId);
-            Log.v(TAG, uri);
-            new DownloadTask().execute(uri);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        String uri = getUri(lineId, vehId);
+        Log.v(TAG, uri);
+        new DownloadTask().execute(uri);
     }
 
     private String getUri(Integer lineId, String vehId) {
-        Uri.Builder uriB = Uri.parse("http://data.itsfactory.fi/journeys/api/1/vehicle-activity")
-                .buildUpon();
+        final HttpUrl.Builder builder = new HttpUrl.Builder()
+                .scheme(SCHEME)
+                .host(HOST)
+                .addPathSegment(PATH_JOURNEYS)
+                .addPathSegment(PATH_API)
+                .addPathSegment(VERSION);
+
         if (lineId > 0) {
-            uriB.appendQueryParameter("lineRef", lineId.toString());
+            builder.addQueryParameter("lineRef", lineId.toString());
         }
         if (vehId.length() > 0 && !vehId.equals("*")) {
-            uriB.appendQueryParameter("vehicleRef", vehId);
+            builder.addQueryParameter("vehicleRef", vehId);
         }
-        return uriB.build().toString();
+        return builder.build().toString();
     }
 
     /**
@@ -59,8 +69,10 @@ public class NetworkApi {
          */
         @Override
         protected void onPostExecute(List<Vehicle> result) {
-            if (NetworkApi.networkApiCallback != null) {
+            if (!isCancelled() && NetworkApi.networkApiCallback != null && !result.isEmpty()) {
                 networkApiCallback.onSuccess(result);
+            } else {
+                networkApiCallback.onError("Failed to receive data from network.");
             }
         }
 

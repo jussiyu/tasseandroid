@@ -32,6 +32,7 @@
 package com.example.android.common.logger;
 
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -76,7 +77,12 @@ public class LogFragment extends Fragment {
         mLogView.setCompoundDrawablePadding(paddingPixels);
 
         mLogView.setGravity(Gravity.BOTTOM);
-        mLogView.setTextAppearance(getActivity(), android.R.style.TextAppearance_Holo_Medium);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            mLogView.setTextAppearance(android.R.style.TextAppearance_Holo_Medium);
+        } else {
+            //noinspection deprecation
+            mLogView.setTextAppearance(getActivity(), android.R.style.TextAppearance_Holo_Medium);
+        }
 
         mScrollView.addView(mLogView);
         return mScrollView;

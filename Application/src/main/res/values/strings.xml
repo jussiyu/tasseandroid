@@ -12,4 +12,5 @@
     <string name="bus_stop_value_default"></string>
     <string name="but_stop_help">You will be notified when your bus is approaching your bus stop</string>
     <string name="bus_stop_hint">for example: 1234</string>
+    <string name="stop_found_message">You have arrived to your stop!</string>
 </resources>

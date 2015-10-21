@@ -26,6 +26,7 @@ import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.android.common.logger.Log;
 import com.example.android.common.logger.LogFragment;
@@ -101,7 +102,7 @@ public class MainActivity extends FragmentActivity {
                 try {
                     stopId = Integer.parseInt(mStopIdView.getText().toString());
                 } catch (NumberFormatException e) {
-                    //DO NOTHING
+                    Toast.makeText(MainActivity.this, "Invalid Stop Id.", Toast.LENGTH_LONG).show();
                 }
 
                 if (stopId != -1) {
@@ -110,13 +111,18 @@ public class MainActivity extends FragmentActivity {
                         Stop s = j.getNextStop();
                         if (s != null && stopId == s.getId()) {
                             AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                            builder.setMessage("Tässe pysäkki ny on!")
+                            builder.setMessage(R.string.stop_found_message)
                                     .setTitle("").setPositiveButton("Ok", null);
                             final AlertDialog dialog = builder.create();
                             dialog.show();
                         }
                     }
                 }
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                Toast.makeText(MainActivity.this, errorMessage, Toast.LENGTH_LONG).show();
             }
         });
     }
