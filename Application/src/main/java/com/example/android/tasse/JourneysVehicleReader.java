@@ -2,24 +2,29 @@ package com.example.android.tasse;
 
 import android.util.JsonReader;
 
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class JourneysVehicleReader {
 
     private List<Vehicle> mVehicles;
+    private final OkHttpClient client;
 
 
     public JourneysVehicleReader() {
-
+        client = new OkHttpClient();
+        client.setReadTimeout(10, TimeUnit.SECONDS);
+        client.setConnectTimeout(15, TimeUnit.SECONDS);
     }
-
 
     /** Initiates the fetch operation. */
     public void loadFromNetwork(String urlString) {
@@ -56,18 +61,13 @@ public class JourneysVehicleReader {
      * @throws java.io.IOException
      */
     private InputStream downloadUrl(String urlString) throws IOException {
-        // BEGIN_INCLUDE(get_inputstream)
-        URL url = new URL(urlString);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setReadTimeout(10000 /* milliseconds */);
-        conn.setConnectTimeout(15000 /* milliseconds */);
-        conn.setRequestMethod("GET");
-        conn.setDoInput(true);
-        // Start the query
-        conn.connect();
-        InputStream stream = conn.getInputStream();
-        return stream;
-        // END_INCLUDE(get_inputstream)
+        final Request request = new Request.Builder()
+                .url(urlString)
+                .build();
+
+        final Response response = client.newCall(request).execute();
+
+        return response.body().byteStream();
     }
 
     /** Reads an InputStream and converts it to a String.
