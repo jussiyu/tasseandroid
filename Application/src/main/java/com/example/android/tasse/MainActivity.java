@@ -91,7 +91,9 @@ public class MainActivity extends FragmentActivity {
             lineId = Integer.parseInt(mLineIdView.getText().toString());
             vehId = mVehIdView.getText().toString();
         } catch (Exception e) {
-            Log.e(TAG, "Failed to parse input parameters");
+            mLineIdView.setText("1");
+            Toast.makeText(this, "Invalid line id. Resetting it to 1.", Toast.LENGTH_SHORT)
+                    .show();
         }
         NetworkApi api = new NetworkApi();
         api.executeNetworkOperation(lineId, vehId, new NetworkApi.NetworkApiCallback() {
