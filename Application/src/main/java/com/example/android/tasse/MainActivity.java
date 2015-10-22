@@ -102,20 +102,20 @@ public class MainActivity extends FragmentActivity {
                 try {
                     stopId = Integer.parseInt(mStopIdView.getText().toString());
                 } catch (NumberFormatException e) {
-                    Toast.makeText(MainActivity.this, "Invalid Stop Id.", Toast.LENGTH_LONG).show();
+                    // Ignore invalid ids
                 }
 
-                if (stopId != -1) {
-                    for (Vehicle v : result) {
-                        Journey j = v.getJourney();
-                        Stop s = j.getNextStop();
-                        if (s != null && stopId == s.getId()) {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                            builder.setMessage(R.string.stop_found_message)
-                                    .setTitle("").setPositiveButton("Ok", null);
-                            final AlertDialog dialog = builder.create();
-                            dialog.show();
-                        }
+                for (Vehicle v : result) {
+                    Journey j = v.getJourney();
+                    Stop s = j.getNextStop();
+                    Log.i(TAG, "Journey: " + j.getVehicleReference() + ", next stop: " + s.getId());
+                    if (s != null && stopId == s.getId()) {
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                        builder.setMessage(R.string.stop_found_message)
+                                .setTitle("").setPositiveButton("Ok", null);
+                        final AlertDialog dialog = builder.create();
+                        dialog.show();
                     }
                 }
             }

@@ -1,11 +1,11 @@
 package com.example.android.tasse.api;
 
 import android.support.annotation.NonNull;
-import android.util.JsonReader;
 
-import com.example.android.tasse.Journey;
-import com.example.android.tasse.Stop;
 import com.example.android.tasse.Vehicle;
+import com.google.gson.Gson;
+import com.google.gson.JsonIOException;
+import com.google.gson.JsonSyntaxException;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
@@ -52,7 +52,9 @@ public class JourneysVehicleReader {
         }
     }
 
-    public @NonNull List<Vehicle> getVehicles() {
+    public
+    @NonNull
+    List<Vehicle> getVehicles() {
         if (mVehicles != null) {
             return mVehicles;
         } else {
@@ -88,100 +90,18 @@ public class JourneysVehicleReader {
      * @throws IOException
      */
     private List<Vehicle> loadVehiclesFromNetwork(Reader reader) throws IOException {
-        JsonReader jsonReader = new JsonReader(reader);
+        Gson gson = new Gson();
+        com.example.android.tasse.api.Response response;
         try {
-            return readVehiclesFromBody(jsonReader);
+            response = gson.fromJson(reader, com.example.android.tasse.api.Response.class);
+            return response.body;
+        } catch (JsonIOException | JsonSyntaxException e) {
+            e.printStackTrace();
         } finally {
             reader.close();
         }
+        return new ArrayList<>();
     }
 
-    private List<Vehicle> readVehiclesFromBody(JsonReader reader) throws IOException {
-        List vehicles = null;
-
-        reader.beginObject();
-        while (reader.hasNext()) {
-            String name = reader.nextName();
-            if (name.equals("body")) {
-                vehicles = readVehicles(reader);
-            } else {
-                reader.skipValue();
-            }
-        }
-        return vehicles;
-    }
-
-    private List<Vehicle> readVehicles(JsonReader reader) throws IOException {
-        List<Vehicle> vehicles = new ArrayList();
-
-        reader.beginArray();
-        while (reader.hasNext()) {
-            vehicles.add(readVehicle(reader));
-        }
-        reader.endArray();
-        return vehicles;
-
-    }
-
-    private Vehicle readVehicle(JsonReader reader) throws IOException {
-        Vehicle v = new Vehicle();
-
-        reader.beginObject();
-        while (reader.hasNext()) {
-            String name = reader.nextName();
-            if (name.equals("monitoredVehicleJourney")) {
-                v.setJourney(readJourney(reader));
-            } else {
-                reader.skipValue();
-            }
-        }
-        reader.endObject();
-
-        return v;
-    }
-
-    private Journey readJourney(JsonReader reader) throws IOException {
-        Journey j = new Journey();
-
-        reader.beginObject();
-        while (reader.hasNext()) {
-            String name = reader.nextName();
-            if (name.equals("onwardCalls")) {
-                j.addStop(readStop(reader));
-            } else if (name.equals("vehicleRef")) {
-                j.addVehRef(reader.nextString());
-            } else {
-                reader.skipValue();
-            }
-        }
-        reader.endObject();
-
-        return j;
-    }
-
-    private Stop readStop(JsonReader reader) throws IOException {
-        Stop stop = new Stop();
-
-        reader.beginArray();
-        if (reader.hasNext()) {
-
-            reader.beginObject();
-            while (reader.hasNext()) {
-                String name = reader.nextName();
-                if (name.equals("stopPointRef")) {
-                    stop.setRef(reader.nextString());
-                } else {
-                    reader.skipValue();
-                }
-            }
-            reader.endObject();
-        }
-        // consume the rest of the bus stops as we don't yet use them
-        while (reader.hasNext()) {
-            reader.skipValue();
-        }
-        reader.endArray();
-        return stop;
-    }
 }
 
