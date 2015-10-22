@@ -13,9 +13,10 @@ public class NetworkApi {
 
     private static final String HOST = "data.itsfactory.fi";
     private static final String SCHEME = "http";
-    private static final String VERSION = "1";
     private final String PATH_JOURNEYS = "journeys";
     private final String PATH_API = "api";
+    private static final String VERSION = "1";
+    private static final String PATH_VEHICLE_ACTIVITY = "vehicle-activity";
 
     private static NetworkApiCallback networkApiCallback;
 
@@ -38,7 +39,8 @@ public class NetworkApi {
                 .host(HOST)
                 .addPathSegment(PATH_JOURNEYS)
                 .addPathSegment(PATH_API)
-                .addPathSegment(VERSION);
+                .addPathSegment(VERSION)
+                .addPathSegment(PATH_VEHICLE_ACTIVITY);
 
         if (lineId > 0) {
             builder.addQueryParameter("lineRef", lineId.toString());
