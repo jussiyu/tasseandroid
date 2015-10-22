@@ -1,44 +1,37 @@
 package com.example.android.tasse;
 
-import com.example.android.common.logger.Log;
+import com.google.gson.annotations.SerializedName;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 
 public class Stop {
     private static final String TAG = "Stop";
+
+    @SerializedName("stopPointRef")
     private String mRef;
-    private Integer mId = -1;
 
     public Stop(String ref) {
         mRef =ref;
     }
 
     public Stop() {
+
     }
 
-    public void setRef(String ref) {
-        mRef = ref;
-//        Log.i(TAG, mRef );
+    public int getId() {
 
+        int id = -1;
         try {
             URI uri = new URI(mRef);
             String path = uri.getPath();
             String idStr = path.substring(path.lastIndexOf('/') + 1);
-            mId = Integer.parseInt(idStr);
+            id = Integer.parseInt(idStr);
         } catch (NumberFormatException e) {
             e.printStackTrace();
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
-        Log.i(TAG, "stop id:" + mId.toString() );
-    }
-
-    public String getRef() {
-        return mRef;
-    }
-
-    public int getId() {
-        return mId;
+        return id;
     }
 }

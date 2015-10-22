@@ -21,18 +21,18 @@ This class is based on NetworkConnect class.
 package com.example.android.tasse;
 
 import android.app.AlertDialog;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.android.common.logger.Log;
 import com.example.android.common.logger.LogFragment;
 import com.example.android.common.logger.LogWrapper;
 import com.example.android.common.logger.MessageOnlyLogFilter;
+import com.example.android.tasse.api.NetworkApi;
 
 import java.util.List;
 
@@ -91,72 +91,48 @@ public class MainActivity extends FragmentActivity {
             lineId = Integer.parseInt(mLineIdView.getText().toString());
             vehId = mVehIdView.getText().toString();
         } catch (Exception e) {
+            mLineIdView.setText("1");
+            Toast.makeText(this, "Invalid line id. Resetting it to 1.", Toast.LENGTH_SHORT)
+                    .show();
         }
+        NetworkApi api = new NetworkApi();
+        api.executeNetworkOperation(lineId, vehId, new NetworkApi.NetworkApiCallback() {
 
-        // TODO Move to JourneysVehicleReader
-        try {
-            Uri.Builder uriB = Uri.parse("http://data.itsfactory.fi/journeys/api/1/vehicle-activity")
-                    .buildUpon();
-            if (lineId > 0) {
-                uriB.appendQueryParameter("lineRef", lineId.toString());
-            }
-            if (vehId.length() > 0 && !vehId.equals("*")) {
-                uriB.appendQueryParameter("vehicleRef", vehId);
-            }
-            String uri = uriB.build().toString();
-            Log.v(TAG, uri);
-            new DownloadTask().execute(uri);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+            @Override
+            public void onSuccess(List<Vehicle> result) {
+                int stopId = -1;
+                try {
+                    stopId = Integer.parseInt(mStopIdView.getText().toString());
+                } catch (NumberFormatException e) {
+                    // Ignore invalid ids
+                }
 
-    /**
-     * Implementation of AsyncTask, to fetch the data in the background away from
-     * the UI thread.
-     */
-    private class DownloadTask extends AsyncTask<String, Void, List<Vehicle>> {
-
-        @Override
-        protected List<Vehicle> doInBackground(String... url) {
-            JourneysVehicleReader reader = new JourneysVehicleReader();
-            reader.loadFromNetwork(url[0]);
-            return reader.getVehicles();
-        }
-
-        /**
-         * Uses the logging framework to display the output of the fetch
-         * operation in the log fragment.
-         */
-        @Override
-        protected void onPostExecute(List<Vehicle> result) {
-            int stopId = -1;
-            try {
-                stopId = Integer.parseInt(mStopIdView.getText().toString());
-            } catch (NumberFormatException e) {
-                //DO NOTHING
-            }
-
-            if (stopId != -1) {
                 for (Vehicle v : result) {
                     Journey j = v.getJourney();
                     Stop s = j.getNextStop();
+                    Log.i(TAG, "Journey: " + j.getVehicleReference() + ", next stop: " + s.getId());
                     if (s != null && stopId == s.getId()) {
+
                         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                        builder.setMessage("Tässe pysäkki ny on!")
-                                .setTitle("").setPositiveButton("Ok",null);
+                        builder.setMessage(R.string.stop_found_message)
+                                .setTitle("").setPositiveButton("Ok", null);
                         final AlertDialog dialog = builder.create();
                         dialog.show();
                     }
                 }
             }
-        }
 
-
+            @Override
+            public void onError(String errorMessage) {
+                Toast.makeText(MainActivity.this, errorMessage, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
 
-    /** Create a chain of targets that will receive log data */
+    /**
+     * Create a chain of targets that will receive log data
+     */
     public void initializeLogging() {
 
         // Using Log, front-end to the logging chain, emulates
